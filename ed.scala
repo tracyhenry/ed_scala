@@ -17,10 +17,14 @@ object HelloWorld
 			n += 1
 		}
 		
-		val numberPair = 200000
-		val randomDis = 50
+		val numberPair = 1000000
+		val randomDis = 3
+		val threshold = 5;
 		var s1 = new Array[Int](numberPair)
 		var s2 = new Array[Int](numberPair)
+
+		println("Running " + numberPair.toString + " times of the edit distance procedure")
+		println("threshold = 5")
 		for (i <- 0 until numberPair)
 		{
 			val x = i
@@ -28,26 +32,42 @@ object HelloWorld
 			s1(i) = x
 			s2(i) = y
 		}
-
+		
+		println("-------------------------------------")
 		println("Start running thresholdLevenshtein...")
 
 		//run
 		var st = System.currentTimeMillis
-		var ans1 = 0
+		var ans1 = new Array[Int](numberPair)
 		for (i <- 0 until numberPair)
-			ans1 = thresholdLevenshtein(lines(s1(i)), lines(s2(i)), 5)
+			ans1(i) = thresholdLevenshtein(lines(s1(i)), lines(s2(i)), threshold)
 
 		var en = System.currentTimeMillis
 		println("thresholdLevenshtein finished! Total running time : " + ((en - st) / 1000.0).toString + "s.")
 
 		st = System.currentTimeMillis
-		var ans2 = 0
+		var ans2 = new Array[Int](numberPair)
 		for (i <- 0 until numberPair)
-			ans2 = thresholdLCS(lines(s1(i)), lines(s2(i)), 5)
+			ans2(i) = thresholdLCS(lines(s1(i)), lines(s2(i)), threshold)
 		en = System.currentTimeMillis
 		println("thresholdLCS finished! Total running time : " + ((en - st) / 1000.0).toString + "s.")
-			
-
+		
+		var totDiffPair = 0			
+		for (i <- 0 until numberPair)
+			if (ans1(i) != ans2(i))
+				totDiffPair += 1
+		
+		println("-------------------------------------")
+		if (totDiffPair == 0)
+			println("The two approaches produced the same results!")
+		else
+			println("The two approaches produced " + totDiffPair.toString + " different answers!")
+		println("-------------------------------------")
+		println("First 10 answers produced by Levenshtein : ")
+		ans1.take(10).foreach(println)
+		println("-------------------------------------")
+		println("First 10 answers produced by LCS : ")
+		ans2.take(10).foreach(println)
 	}
 
 	def thresholdLevenshtein(_s: String, _t: String, threshold: Int): Int = 
