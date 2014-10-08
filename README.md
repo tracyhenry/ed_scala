@@ -1,9 +1,11 @@
-ed_scala
+Scala version of edit distance calculation
 ========
 - Run :
-  ./run.sh
+
+    ./run.sh
   
 - Data : 
-  querylog
+
+    querylog
   
 - Generated randomly 1 million pairs of strings for testing
